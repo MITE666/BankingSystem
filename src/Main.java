@@ -6,12 +6,13 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         BankService bankService = new BankService();
+        LoanService loanService = new LoanService();
         while (true) {
-            displayMenu(bankService);
+            displayMenu(bankService, loanService);
         }
     }
 
-    private static void displayMenu(BankService bankService) {
+    private static void displayMenu(BankService bankService, LoanService loanService) {
         System.out.println("""
                 
                 Select an option from the menu below:
@@ -22,7 +23,11 @@ public class Main {
                 5. Display customer information
                 6. Display transactions
                 7. Increment saving accounts
-                8. Exit
+                8. Add loan
+                9. Get monthly rate
+                10. Display loans
+                11. Make payment
+                12. Exit
                 
                 """);
 
@@ -37,7 +42,11 @@ public class Main {
             case 5 -> displayCustomer(bankService);
             case 6 -> displayTransactions(bankService);
             case 7 -> incrementSavings(bankService);
-            case 8 -> System.exit(0);
+            case 8 -> addLoan(loanService);
+            case 9 -> displayMonthlyRate(loanService);
+            case 10 -> displayLoans(loanService);
+            case 11 -> makePayment(loanService);
+            case 12 -> System.exit(0);
             default -> System.out.println("Invalid option");
         }
     }
@@ -97,5 +106,39 @@ public class Main {
 
     private static void incrementSavings(BankService bankService) {
         bankService.incrementSavings();
+    }
+
+    private static void addLoan(LoanService loanService) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Customer name:");
+        String name = scanner.nextLine();
+        System.out.println("Loan amount:");
+        double amount = scanner.nextDouble();
+        System.out.println("Repayment period:");
+        int period = scanner.nextInt();
+        loanService.addLoan(name, amount, period);
+    }
+
+    private static void displayMonthlyRate(LoanService loanService) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Loan ID:");
+        int id = scanner.nextInt();
+        loanService.displayMonthlyPayment(id);
+    }
+
+    private static void displayLoans(LoanService loanService) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Customer name:");
+        String name = scanner.nextLine();
+        loanService.displayLoans(name);
+    }
+
+    private static void makePayment(LoanService loanService) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Loan ID:");
+        int id = scanner.nextInt();
+        System.out.println("Payment amount:");
+        double amount = scanner.nextDouble();
+        loanService.makePayment(id, amount);
     }
 }
