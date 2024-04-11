@@ -6,6 +6,8 @@ import java.util.*;
 
 public class BankService {
     private static double interestRate = 2.5;
+    private static double mmInterestRate = 7.5;
+    private static double withdrawalLimit = 5000;
     private static double overdraftLimit = 1000;
     private static int accountCount = 0;
     private Map<Customer, List<BankAccount>> customers;
@@ -30,11 +32,14 @@ public class BankService {
             customer = new Customer(customerName);
         }
         BankAccount account;
-        if (accountType.equalsIgnoreCase("Savings")) {
-            account = new SavingsAccount(accountCount, interestRate);
-        } else {
-            account = new CheckingAccount(accountCount, overdraftLimit);
+
+        switch(accountType.toLowerCase()) {
+            case "savings" -> account = new SavingsAccount(accountCount, interestRate);
+            case "checking" -> account = new CheckingAccount(accountCount, overdraftLimit);
+            case "moneymarket" -> account = new MoneyMarketAccount(accountCount, mmInterestRate, withdrawalLimit);
+            default -> account = new CertificateOfDepositAccount(accountCount, interestRate, 12);
         }
+
         accountCount++;
         account.deposit(initialBalance);
         if (!found) {
