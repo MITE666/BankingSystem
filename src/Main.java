@@ -80,14 +80,14 @@ public class Main {
         System.out.println("Amount:");
         double amount = scanner.nextDouble();
         System.out.println("Description:");
-        String description = scanner.next();
+        String description = scanner.nextLine();
         bankService.transfer(src, dst, amount, description);
     }
 
     private static void displayCustomer(BankService bankService) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Customer name:");
-        String name = scanner.next();
+        String name = scanner.nextLine();
         bankService.displayCustomer(name);
     }
 

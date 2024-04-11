@@ -8,7 +8,7 @@ public class BankService {
     private static double interestRate = 2.5;
     private static double overdraftLimit = 1000;
     private static int accountCount = 0;
-    private Map<Integer, Customer> customers;
+    private Map<Customer, List<BankAccount>> customers;
     private List<Transaction> transactions;
 
     public BankService() {
@@ -18,9 +18,11 @@ public class BankService {
 
     public void createAccount(String customerName, double initialBalance, String accountType) {
         Customer customer = null;
-        for (Customer c : customers.values()) {
+        boolean found = false;
+        for (Customer c : customers.keySet()) {
             if (Objects.equals(c.getName(), customerName)) {
                 customer = c;
+                found = true;
                 break;
             }
         }
@@ -35,8 +37,10 @@ public class BankService {
         }
         accountCount++;
         account.deposit(initialBalance);
-        customer.addAccount(account);
-        customers.putIfAbsent(accountCount, customer);
+        if (!found) {
+            customers.put(customer, new ArrayList<>());
+        }
+        customers.get(customer).add(account);
     }
 
     public boolean deposit(int accountNumber, double amount) {
@@ -79,9 +83,12 @@ public class BankService {
     }
 
     public void displayCustomer(String name) {
-        for (Customer customer : customers.values()) {
+        for (Customer customer : customers.keySet()) {
             if (Objects.equals(customer.getName(), name)) {
                 System.out.println(customer);
+                for (BankAccount account : customers.get(customer)) {
+                    System.out.println(account);
+                }
                 return;
             }
         }
@@ -94,8 +101,8 @@ public class BankService {
     }
 
     public void incrementSavings() {
-        for (Customer customer : customers.values()) {
-            for (BankAccount account : customer.getAccounts()) {
+        for (Customer customer : customers.keySet()) {
+            for (BankAccount account : customers.get(customer)) {
                 if (account instanceof SavingsAccount) {
                     ((SavingsAccount) account).calculateInterest();
                 }
@@ -104,8 +111,8 @@ public class BankService {
     }
 
     private Customer findCustomer(int accountNumber) {
-        for (Customer customer : customers.values()) {
-            for (BankAccount account : customer.getAccounts()) {
+        for (Customer customer : customers.keySet()) {
+            for (BankAccount account : customers.get(customer)) {
                 if (account.getAccountNumber() == accountNumber) {
                     return customer;
                 }
@@ -115,7 +122,7 @@ public class BankService {
     }
 
     private BankAccount findAccount(Customer customer, int accountNumber) {
-        for (BankAccount account : customer.getAccounts()) {
+        for (BankAccount account : customers.get(customer)) {
             if (account.getAccountNumber() == accountNumber) {
                 return account;
             }
