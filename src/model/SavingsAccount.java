@@ -12,4 +12,9 @@ public class SavingsAccount extends BankAccount{
         double interest = getBalance() * interestRate / 100;
         deposit(interest);
     }
+
+    @Override
+    public String toString() {
+        return "Savings Account" + super.toString();
+    }
 }

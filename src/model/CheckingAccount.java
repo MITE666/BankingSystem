@@ -16,4 +16,9 @@ public class CheckingAccount extends BankAccount {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Checking Account" + super.toString();
+    }
 }
