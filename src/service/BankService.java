@@ -87,6 +87,22 @@ public class BankService {
         }
     }
 
+    public void displayTransactions() {
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
+        }
+    }
+
+    public void incrementSavings() {
+        for (Customer customer : customers.values()) {
+            for (BankAccount account : customer.getAccounts()) {
+                if (account instanceof SavingsAccount) {
+                    ((SavingsAccount) account).calculateInterest();
+                }
+            }
+        }
+    }
+
     private Customer findCustomer(int accountNumber) {
         for (Customer customer : customers.values()) {
             for (BankAccount account : customer.getAccounts()) {

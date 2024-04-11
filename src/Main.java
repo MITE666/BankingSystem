@@ -20,7 +20,9 @@ public class Main {
                 3. Withdraw from account
                 4. Create transfer
                 5. Display customer information
-                6. Exit
+                6. Display transactions
+                7. Increment saving accounts
+                8. Exit
                 
                 """);
 
@@ -33,7 +35,9 @@ public class Main {
             case 3 -> addWithdrawal(bankService);
             case 4 -> addTransfer(bankService);
             case 5 -> displayCustomer(bankService);
-            case 6 -> System.exit(0);
+            case 6 -> displayTransactions(bankService);
+            case 7 -> incrementSavings(bankService);
+            case 8 -> System.exit(0);
             default -> System.out.println("Invalid option");
         }
     }
@@ -85,5 +89,13 @@ public class Main {
         System.out.println("Customer name:");
         String name = scanner.next();
         bankService.displayCustomer(name);
+    }
+
+    private static void displayTransactions(BankService bankService) {
+        bankService.displayTransactions();
+    }
+
+    private static void incrementSavings(BankService bankService) {
+        bankService.incrementSavings();
     }
 }
