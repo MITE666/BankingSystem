@@ -1,57 +1,25 @@
 package service;
 
 import model.*;
+import repository.BankRepository;
 
 import java.util.*;
 
 public class BankService {
-    private static double interestRate = 2.5;
-    private static double mmInterestRate = 7.5;
-    private static double withdrawalLimit = 5000;
-    private static double overdraftLimit = 1000;
-    private static int accountCount = 0;
-    private Map<Customer, List<BankAccount>> customers;
-    private List<Transaction> transactions;
+    private final BankRepository bankRepository;
 
-    public BankService() {
-        this.customers = new HashMap<>();
-        this.transactions = new ArrayList<>();
+    public BankService(BankRepository bankRepository) {
+        this.bankRepository = bankRepository;
     }
 
     public void createAccount(String customerName, double initialBalance, String accountType) {
-        Customer customer = null;
-        boolean found = false;
-        for (Customer c : customers.keySet()) {
-            if (Objects.equals(c.getName(), customerName)) {
-                customer = c;
-                found = true;
-                break;
-            }
-        }
-        if (customer == null) {
-            customer = new Customer(customerName);
-        }
-        BankAccount account;
-
-        switch(accountType.toLowerCase()) {
-            case "savings" -> account = new SavingsAccount(accountCount, interestRate);
-            case "checking" -> account = new CheckingAccount(accountCount, overdraftLimit);
-            case "moneymarket" -> account = new MoneyMarketAccount(accountCount, mmInterestRate, withdrawalLimit);
-            default -> account = new CertificateOfDepositAccount(accountCount, interestRate, 12);
-        }
-
-        accountCount++;
-        account.deposit(initialBalance);
-        if (!found) {
-            customers.put(customer, new ArrayList<>());
-        }
-        customers.get(customer).add(account);
+        bankRepository.createAccount(customerName, initialBalance, accountType);
     }
 
     public boolean deposit(int accountNumber, double amount) {
-        Customer customer = findCustomer(accountNumber);
+        Customer customer = bankRepository.getCustomer(accountNumber);
         if (customer != null) {
-            BankAccount account = findAccount(customer, accountNumber);
+            BankAccount account = bankRepository.getAccount(customer, accountNumber);
             if (account != null) {
                 account.deposit(amount);
                 return true;
@@ -61,9 +29,9 @@ public class BankService {
     }
 
     public boolean withdraw(int accountNumber, double amount) {
-        Customer customer = findCustomer(accountNumber);
+        Customer customer = bankRepository.getCustomer(accountNumber);
         if (customer != null) {
-            BankAccount account = findAccount(customer, accountNumber);
+            BankAccount account = bankRepository.getAccount(customer, accountNumber);
             if (account != null) {
                 return account.withdraw(amount);
             }
@@ -72,26 +40,26 @@ public class BankService {
     }
 
     public void transfer(int fromAccountNumber, int toAccountNumber, double amount, String description) {
-        Customer fromCustomer = findCustomer(fromAccountNumber);
-        Customer toCustomer = findCustomer(toAccountNumber);
+        Customer fromCustomer = bankRepository.getCustomer(fromAccountNumber);
+        Customer toCustomer = bankRepository.getCustomer(toAccountNumber);
         if (fromCustomer != null && toCustomer != null) {
-            BankAccount fromAccount = findAccount(fromCustomer, fromAccountNumber);
-            BankAccount toAccount = findAccount(toCustomer, toAccountNumber);
+            BankAccount fromAccount = bankRepository.getAccount(fromCustomer, fromAccountNumber);
+            BankAccount toAccount = bankRepository.getAccount(toCustomer, toAccountNumber);
             if (fromAccount != null && toAccount != null) {
                 if (fromAccount.withdraw(amount)) {
                     toAccount.deposit(amount);
                     Transaction transaction = new Transaction(description, amount, fromAccount, toAccount);
-                    transactions.add(transaction);
+                    bankRepository.getTransactions().add(transaction);
                 }
             }
         }
     }
 
     public void displayCustomer(String name) {
-        for (Customer customer : customers.keySet()) {
+        for (Customer customer : bankRepository.getCustomers().keySet()) {
             if (Objects.equals(customer.getName(), name)) {
                 System.out.println(customer);
-                for (BankAccount account : customers.get(customer)) {
+                for (BankAccount account : bankRepository.getCustomers().get(customer)) {
                     System.out.println(account);
                 }
                 return;
@@ -100,38 +68,18 @@ public class BankService {
     }
 
     public void displayTransactions() {
-        for (Transaction transaction : transactions) {
+        for (Transaction transaction : bankRepository.getTransactions()) {
             System.out.println(transaction);
         }
     }
 
     public void incrementSavings() {
-        for (Customer customer : customers.keySet()) {
-            for (BankAccount account : customers.get(customer)) {
+        for (Customer customer : bankRepository.getCustomers().keySet()) {
+            for (BankAccount account : bankRepository.getCustomers().get(customer)) {
                 if (account instanceof SavingsAccount) {
                     ((SavingsAccount) account).calculateInterest();
                 }
             }
         }
-    }
-
-    private Customer findCustomer(int accountNumber) {
-        for (Customer customer : customers.keySet()) {
-            for (BankAccount account : customers.get(customer)) {
-                if (account.getAccountNumber() == accountNumber) {
-                    return customer;
-                }
-            }
-        }
-        return null;
-    }
-
-    private BankAccount findAccount(Customer customer, int accountNumber) {
-        for (BankAccount account : customers.get(customer)) {
-            if (account.getAccountNumber() == accountNumber) {
-                return account;
-            }
-        }
-        return null;
     }
 }

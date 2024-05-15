@@ -1,12 +1,18 @@
 import model.BankAccount;
+import repository.BankRepository;
+import repository.BankRepositoryImpl;
+import repository.LoanRepository;
+import repository.LoanRepositoryImpl;
 import service.*;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        BankService bankService = new BankService();
-        LoanService loanService = new LoanService();
+        BankRepository bankRepository = new BankRepositoryImpl();
+        BankService bankService = new BankService(bankRepository);
+        LoanRepository loanRepository = new LoanRepositoryImpl();
+        LoanService loanService = new LoanService(loanRepository);
         while (true) {
             displayMenu(bankService, loanService);
         }
