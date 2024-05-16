@@ -3,6 +3,7 @@ package repository;
 import model.BankAccount;
 import model.Customer;
 import model.Loan;
+import service.AuditService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class JDBCLoanRepository implements LoanRepository{
                 ex.printStackTrace();
             }
         }
+        AuditService.getInstance().logAction("Created loan");
     }
 
     public Map<Customer, List<Loan>> getLoans() throws SQLException {
@@ -93,6 +95,7 @@ public class JDBCLoanRepository implements LoanRepository{
             if (rs != null) rs.close();
             if (stmt != null) stmt.close();
         }
+        AuditService.getInstance().logAction("Got customers with their loans");
         return customers;
     }
 }

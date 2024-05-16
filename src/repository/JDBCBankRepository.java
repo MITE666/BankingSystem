@@ -4,6 +4,7 @@ import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import model.BankAccount;
 import model.Customer;
 import model.Transaction;
+import service.AuditService;
 
 import java.lang.reflect.AccessFlag;
 import java.sql.*;
@@ -65,6 +66,7 @@ public class JDBCBankRepository implements BankRepository {
                 ex.printStackTrace();
             }
         }
+        AuditService.getInstance().logAction("Created account");
     }
 
     public Customer getCustomer(int accountNumber) throws SQLException {
@@ -82,6 +84,7 @@ public class JDBCBankRepository implements BankRepository {
             if (rs != null) rs.close();
             if (customerStatement != null) customerStatement.close();
         }
+        AuditService.getInstance().logAction("Got customer");
         return null;
     }
 
@@ -101,6 +104,7 @@ public class JDBCBankRepository implements BankRepository {
             if (rs != null) rs.close();
             if (accountStatement != null) accountStatement.close();
         }
+        AuditService.getInstance().logAction("Got account");
         return account;
     }
 
@@ -119,6 +123,7 @@ public class JDBCBankRepository implements BankRepository {
             if (rs != null) rs.close();
             if (stmt != null) stmt.close();
         }
+        AuditService.getInstance().logAction("Got transactions");
         return transactions;
     }
 
@@ -145,6 +150,7 @@ public class JDBCBankRepository implements BankRepository {
             if (rs != null) rs.close();
             if (stmt != null) stmt.close();
         }
+        AuditService.getInstance().logAction("Got customers with their accounts");
         return customers;
     }
 }
