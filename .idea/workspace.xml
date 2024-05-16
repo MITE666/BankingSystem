@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c31ebe23-9aa1-4722-9d7c-3e323af9be63" name="Changes" comment="added loan and bank repository and thei implementation" />
+    <list default="true" id="c31ebe23-9aa1-4722-9d7c-3e323af9be63" name="Changes" comment="added loan and bank repository and their implementation">
+      <change afterPath="$PROJECT_DIR$/bankdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/repository/DbConstants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/repository/JDBCBankRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/repository/JDBCLoanRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BakingSystem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/BakingSystem.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/BankRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/BankRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/LoanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/LoanRepository.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,16 +53,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;D:/IntelliJ/Java projects/BakingSystem/src/Main.java&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/MITE666/Downloads/mysql-connector-j-8.4.0/mysql-connector-j-8.4.0/mysql-connector-j-8.4.0.jar",
+    "onboarding.tips.debug.path": "D:/IntelliJ/Java projects/BakingSystem/src/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -134,7 +147,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715804569653</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="added loan and bank repository and their implementation">
+      <option name="closed" value="true" />
+      <created>1715804647143</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1715804647144</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -145,6 +166,7 @@
     <MESSAGE value="loan + loan service" />
     <MESSAGE value="2 new types of accounts" />
     <MESSAGE value="added loan and bank repository and thei implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="added loan and bank repository and thei implementation" />
+    <MESSAGE value="added loan and bank repository and their implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="added loan and bank repository and their implementation" />
   </component>
 </project>
