@@ -4,6 +4,7 @@ import model.*;
 import repository.LoanRepository;
 import repository.LoanRepositoryImpl;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class LoanService {
@@ -17,7 +18,7 @@ public class LoanService {
         loanRepository.addLoan(customerName, loanAmount, repaymentPeriod);
     }
 
-    public void displayLoans(String name) {
+    public void displayLoans(String name) throws SQLException {
         for (Customer customer : loanRepository.getLoans().keySet()) {
             if (Objects.equals(name, customer.getName())) {
                 System.out.println("\nCustomer: " + customer);
@@ -29,7 +30,7 @@ public class LoanService {
         }
     }
 
-    public void displayMonthlyPayment(int loanId) {
+    public void displayMonthlyPayment(int loanId) throws SQLException {
         for (Customer customer : loanRepository.getLoans().keySet()) {
             for (Loan loan : loanRepository.getLoans().get(customer)) {
                 if (loan.getLoanId() == loanId) {
@@ -39,7 +40,7 @@ public class LoanService {
         }
     }
 
-    public void makePayment(int loanId, double amount) {
+    public void makePayment(int loanId, double amount) throws SQLException {
         for (Customer customer : loanRepository.getLoans().keySet()) {
             for (Loan loan : loanRepository.getLoans().get(customer)) {
                 if (loan.getLoanId() == loanId) {

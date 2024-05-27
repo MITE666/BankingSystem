@@ -1,28 +1,26 @@
 import model.BankAccount;
-import repository.BankRepository;
-import repository.BankRepositoryImpl;
-import repository.LoanRepository;
-import repository.LoanRepositoryImpl;
+import repository.*;
 import service.*;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        BankRepository bankRepository = new BankRepositoryImpl();
+    public static void main(String[] args) throws SQLException {
+        BankRepository bankRepository = new JDBCBankRepository();
         BankService bankService = new BankService(bankRepository);
-        LoanRepository loanRepository = new LoanRepositoryImpl();
+        LoanRepository loanRepository = new JDBCLoanRepository();
         LoanService loanService = new LoanService(loanRepository);
         while (true) {
             displayMenu(bankService, loanService);
         }
     }
 
-    private static void displayMenu(BankService bankService, LoanService loanService) {
+    private static void displayMenu(BankService bankService, LoanService loanService) throws SQLException {
         System.out.println("""
                 
                 Select an option from the menu below:
-                1. Add account
+                1. Add account (checking, CoD, MM, savings)
                 2. Deposit to account
                 3. Withdraw from account
                 4. Create transfer
@@ -68,7 +66,7 @@ public class Main {
         bankService.createAccount(name, balance, type);
     }
 
-    private static void addDeposit(BankService bankService) {
+    private static void addDeposit(BankService bankService) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Account number:");
         int number = scanner.nextInt();
@@ -77,7 +75,7 @@ public class Main {
         bankService.deposit(number, amount);
     }
 
-    private static void addWithdrawal(BankService bankService) {
+    private static void addWithdrawal(BankService bankService) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Account number:");
         int number = scanner.nextInt();
@@ -86,7 +84,7 @@ public class Main {
         bankService.withdraw(number, amount);
     }
 
-    private static void addTransfer(BankService bankService) {
+    private static void addTransfer(BankService bankService) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("From:");
         int src = scanner.nextInt();
@@ -99,18 +97,18 @@ public class Main {
         bankService.transfer(src, dst, amount, description);
     }
 
-    private static void displayCustomer(BankService bankService) {
+    private static void displayCustomer(BankService bankService) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Customer name:");
         String name = scanner.nextLine();
         bankService.displayCustomer(name);
     }
 
-    private static void displayTransactions(BankService bankService) {
+    private static void displayTransactions(BankService bankService) throws SQLException {
         bankService.displayTransactions();
     }
 
-    private static void incrementSavings(BankService bankService) {
+    private static void incrementSavings(BankService bankService) throws SQLException {
         bankService.incrementSavings();
     }
 
@@ -125,21 +123,21 @@ public class Main {
         loanService.addLoan(name, amount, period);
     }
 
-    private static void displayMonthlyRate(LoanService loanService) {
+    private static void displayMonthlyRate(LoanService loanService) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Loan ID:");
         int id = scanner.nextInt();
         loanService.displayMonthlyPayment(id);
     }
 
-    private static void displayLoans(LoanService loanService) {
+    private static void displayLoans(LoanService loanService) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Customer name:");
         String name = scanner.nextLine();
         loanService.displayLoans(name);
     }
 
-    private static void makePayment(LoanService loanService) {
+    private static void makePayment(LoanService loanService) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Loan ID:");
         int id = scanner.nextInt();

@@ -3,6 +3,7 @@ package service;
 import model.*;
 import repository.BankRepository;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class BankService {
@@ -16,7 +17,7 @@ public class BankService {
         bankRepository.createAccount(customerName, initialBalance, accountType);
     }
 
-    public boolean deposit(int accountNumber, double amount) {
+    public boolean deposit(int accountNumber, double amount) throws SQLException {
         Customer customer = bankRepository.getCustomer(accountNumber);
         if (customer != null) {
             BankAccount account = bankRepository.getAccount(customer, accountNumber);
@@ -28,7 +29,7 @@ public class BankService {
         return false;
     }
 
-    public boolean withdraw(int accountNumber, double amount) {
+    public boolean withdraw(int accountNumber, double amount) throws SQLException {
         Customer customer = bankRepository.getCustomer(accountNumber);
         if (customer != null) {
             BankAccount account = bankRepository.getAccount(customer, accountNumber);
@@ -39,7 +40,7 @@ public class BankService {
         return false;
     }
 
-    public void transfer(int fromAccountNumber, int toAccountNumber, double amount, String description) {
+    public void transfer(int fromAccountNumber, int toAccountNumber, double amount, String description) throws SQLException {
         Customer fromCustomer = bankRepository.getCustomer(fromAccountNumber);
         Customer toCustomer = bankRepository.getCustomer(toAccountNumber);
         if (fromCustomer != null && toCustomer != null) {
@@ -55,7 +56,7 @@ public class BankService {
         }
     }
 
-    public void displayCustomer(String name) {
+    public void displayCustomer(String name) throws SQLException {
         for (Customer customer : bankRepository.getCustomers().keySet()) {
             if (Objects.equals(customer.getName(), name)) {
                 System.out.println(customer);
@@ -67,13 +68,13 @@ public class BankService {
         }
     }
 
-    public void displayTransactions() {
+    public void displayTransactions() throws SQLException {
         for (Transaction transaction : bankRepository.getTransactions()) {
             System.out.println(transaction);
         }
     }
 
-    public void incrementSavings() {
+    public void incrementSavings() throws SQLException {
         for (Customer customer : bankRepository.getCustomers().keySet()) {
             for (BankAccount account : bankRepository.getCustomers().get(customer)) {
                 if (account instanceof SavingsAccount) {

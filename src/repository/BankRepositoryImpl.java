@@ -1,6 +1,7 @@
 package repository;
 
 import model.*;
+import service.AuditService;
 
 import java.util.*;
 
@@ -20,11 +21,13 @@ public class BankRepositoryImpl implements BankRepository {
 
     @Override
     public List<Transaction> getTransactions() {
+        AuditService.getInstance().logAction("Got transactions");
         return transactions;
     }
 
     @Override
     public Map<Customer, List<BankAccount>> getCustomers() {
+        AuditService.getInstance().logAction("Got customers with their accounts");
         return customers;
     }
 
@@ -47,7 +50,7 @@ public class BankRepositoryImpl implements BankRepository {
         switch(accountType.toLowerCase()) {
             case "savings" -> account = new SavingsAccount(accountCount, interestRate);
             case "checking" -> account = new CheckingAccount(accountCount, overdraftLimit);
-            case "moneymarket" -> account = new MoneyMarketAccount(accountCount, mmInterestRate, withdrawalLimit);
+            case "MM" -> account = new MoneyMarketAccount(accountCount, mmInterestRate, withdrawalLimit);
             default -> account = new CertificateOfDepositAccount(accountCount, interestRate, 12);
         }
 
@@ -57,6 +60,7 @@ public class BankRepositoryImpl implements BankRepository {
             customers.put(customer, new ArrayList<>());
         }
         customers.get(customer).add(account);
+        AuditService.getInstance().logAction("Created account");
     }
 
 
@@ -65,10 +69,12 @@ public class BankRepositoryImpl implements BankRepository {
         for (Customer customer : customers.keySet()) {
             for (BankAccount account : customers.get(customer)) {
                 if (account.getAccountNumber() == accountNumber) {
+                    AuditService.getInstance().logAction("Got customer");
                     return customer;
                 }
             }
         }
+        AuditService.getInstance().logAction("Got customer");
         return null;
     }
 
@@ -76,9 +82,11 @@ public class BankRepositoryImpl implements BankRepository {
     public BankAccount getAccount(Customer customer, int accountNumber) {
         for (BankAccount account : customers.get(customer)) {
             if (account.getAccountNumber() == accountNumber) {
+                AuditService.getInstance().logAction("Got account");
                 return account;
             }
         }
+        AuditService.getInstance().logAction("Got account");
         return null;
     }
 }
