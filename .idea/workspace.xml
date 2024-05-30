@@ -4,21 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c31ebe23-9aa1-4722-9d7c-3e323af9be63" name="Changes" comment="jdbc for loan and bank repositories">
+    <list default="true" id="c31ebe23-9aa1-4722-9d7c-3e323af9be63" name="Changes" comment="fixed bugs with db">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/audit.csv" beforeDir="false" afterPath="$PROJECT_DIR$/logs/audit.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/BankAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BankAccount.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Loan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Loan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repository/BankRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/BankRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repository/BankRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/BankRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repository/JDBCBankRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/JDBCBankRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/repository/JDBCLoanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/JDBCLoanRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repository/LoanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/LoanRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repository/LoanRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/LoanRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/BankService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/BankService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/LoanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/LoanService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +51,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Debug",
+    "Application.Main.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -97,7 +87,7 @@
       <option name="presentableId" value="Default" />
       <updated>1712818606842</updated>
       <workItem from="1716845697319" duration="6028000" />
-      <workItem from="1717074508083" duration="4154000" />
+      <workItem from="1717074508083" duration="5152000" />
     </task>
     <task id="LOCAL-00001" summary="Sample">
       <option name="closed" value="true" />
@@ -179,7 +169,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715867554243</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fixed bugs with db">
+      <option name="closed" value="true" />
+      <created>1717078784272</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1717078784272</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,7 +193,8 @@
     <MESSAGE value="added loan and bank repository and thei implementation" />
     <MESSAGE value="added loan and bank repository and their implementation" />
     <MESSAGE value="jdbc for loan and bank repositories" />
-    <option name="LAST_COMMIT_MESSAGE" value="jdbc for loan and bank repositories" />
+    <MESSAGE value="fixed bugs with db" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bugs with db" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -212,8 +211,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/service/LoanService.java</url>
-          <line>33</line>
-          <option name="timeStamp" value="6" />
+          <line>47</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

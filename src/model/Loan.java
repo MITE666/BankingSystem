@@ -37,6 +37,10 @@ public class Loan {
         }
     }
 
+    public void setCurrentBalance(double balance) {
+        this.currentBalance = balance;
+    }
+
     @Override
     public String toString() {
         return "\nLoan ID: " + loanId +

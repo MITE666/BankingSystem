@@ -78,7 +78,7 @@ public class JDBCLoanRepository implements LoanRepository {
         ResultSet rs = null;
         try {
             conn = getConnection();
-            String query = "SELECT c.customer_id, c.first_name, l.loan_id, l.amount, l.repayment_period FROM customers c " +
+            String query = "SELECT c.customer_id, c.first_name, l.loan_id, l.amount, l.repayment_period, l.balance FROM customers c " +
                     "JOIN loans l ON c.customer_id = l.customer_id";
             stmt = conn.prepareStatement(query);
             rs = stmt.executeQuery();
@@ -88,9 +88,11 @@ public class JDBCLoanRepository implements LoanRepository {
                 int loanId = rs.getInt("loan_id");
                 double loanAmount = rs.getDouble("amount");
                 int repaymentPeriod = rs.getInt("repayment_period");
+                double balance = rs.getDouble("balance");
 
                 Customer customer = new Customer(firstName);
                 Loan loan = new Loan(loanId, loanAmount, interestRate, repaymentPeriod);
+                loan.setCurrentBalance(balance);
 
                 customers.putIfAbsent(customer, new ArrayList<>());
                 customers.get(customer).add(loan);
