@@ -11,4 +11,6 @@ public interface LoanRepository {
     void addLoan(String customerName, double loanAmount, int repaymentPeriod);
 
     Map<Customer, List<Loan>> getLoans() throws SQLException;
+
+    public void makeLoanPayment(int loanId, double paymentAmount) throws SQLException;
 }

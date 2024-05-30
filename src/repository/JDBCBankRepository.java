@@ -4,6 +4,7 @@ import model.*;
 import service.AuditService;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -141,17 +142,47 @@ public class JDBCBankRepository implements BankRepository {
     public BankAccount getAccount(Customer customer, int accountNumber) throws SQLException {
         Connection conn = null;
         PreparedStatement accountStatement = null;
-        BankAccount account = null;
         ResultSet rs = null;
+        BankAccount account = null;
         try {
             conn = getConnection();
-            String selectAccountSQL = "SELECT a.account_id, a.balance FROM customers c JOIN accounts a ON c.customer_id = a.customer_id WHERE c.first_name = ? AND a.account_id = ?";
+            String selectAccountSQL = "SELECT a.account_id, a.balance, " +
+                    "sa.interest_rate AS sa_interest_rate, " +
+                    "ca.overdraft_limit AS ca_overdraft_limit, " +
+                    "mma.interest_rate AS mma_interest_rate, mma.withdrawal_limit, " +
+                    "coda.interest_rate AS coda_interest_rate, coda.term_months " +
+                    "FROM accounts a " +
+                    "LEFT JOIN savings_accounts sa ON a.account_id = sa.account_id " +
+                    "LEFT JOIN checking_accounts ca ON a.account_id = ca.account_id " +
+                    "LEFT JOIN mm_accounts mma ON a.account_id = mma.account_id " +
+                    "LEFT JOIN cod_accounts coda ON a.account_id = coda.account_id " +
+                    "JOIN customers c ON a.customer_id = c.customer_id " +
+                    "WHERE c.first_name = ? AND a.account_id = ?";
             accountStatement = conn.prepareStatement(selectAccountSQL);
             accountStatement.setString(1, customer.getName());
             accountStatement.setInt(2, accountNumber);
             rs = accountStatement.executeQuery();
             if (rs.next()) {
-                account = new BankAccount(rs.getInt("account_id"));
+                int accountId = rs.getInt("account_id");
+                double balance = rs.getDouble("balance");
+                if (rs.getString("sa_interest_rate") != null) {
+                    double interestRate = rs.getDouble("sa_interest_rate");
+                    account = new SavingsAccount(accountId, interestRate);
+                } else if (rs.getString("ca_overdraft_limit") != null) {
+                    double overdraftLimit = rs.getDouble("ca_overdraft_limit");
+                    account = new CheckingAccount(accountId, overdraftLimit);
+                } else if (rs.getString("mma_interest_rate") != null) {
+                    double interestRate = rs.getDouble("mma_interest_rate");
+                    double withdrawalLimit = rs.getDouble("withdrawal_limit");
+                    account = new MoneyMarketAccount(accountId, interestRate, withdrawalLimit);
+                } else if (rs.getString("coda_interest_rate") != null) {
+                    double interestRate = rs.getDouble("coda_interest_rate");
+                    int termMonths = rs.getInt("term_months");
+                    account = new CertificateOfDepositAccount(accountId, interestRate, termMonths);
+                } else {
+                    account = new BankAccount(accountId);
+                }
+                account.setBalance(balance);
             }
         } finally {
             if (rs != null) rs.close();
@@ -161,6 +192,7 @@ public class JDBCBankRepository implements BankRepository {
         AuditService.getInstance().logAction("Got account");
         return account;
     }
+
 
     public List<Transaction> getTransactions() throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
@@ -208,6 +240,7 @@ public class JDBCBankRepository implements BankRepository {
 
                 Customer customer = new Customer(firstName);
                 BankAccount bankAccount = new BankAccount(accountId);
+                bankAccount.setBalance(balance);
 
                 customers.putIfAbsent(customer, new ArrayList<>());
                 customers.get(customer).add(bankAccount);
@@ -220,4 +253,154 @@ public class JDBCBankRepository implements BankRepository {
         AuditService.getInstance().logAction("Got customers with their accounts");
         return customers;
     }
+
+    public void addTransaction(Transaction transaction) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            String insertTransactionSQL = "INSERT INTO transactions (t_date, descr, amount, source_id, destination_id) VALUES (?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(insertTransactionSQL, Statement.RETURN_GENERATED_KEYS);
+            stmt.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            stmt.setString(2, transaction.getDescription());
+            stmt.setDouble(3, transaction.getAmount());
+            stmt.setInt(4, transaction.getSource().getAccountNumber());
+            stmt.setInt(5, transaction.getDestination().getAccountNumber());
+            stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                int transactionId = rs.getInt(1);
+                System.out.println("Transaction ID: " + transactionId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        AuditService.getInstance().logAction("Added transaction: " + transaction.getDescription());
+    }
+
+    public void addDeposit(int accountNumber, double amount) throws SQLException {
+        Connection conn = null;
+        PreparedStatement updateBalanceStmt = null;
+        PreparedStatement insertTransactionStmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            // Update account balance
+            String updateBalanceSQL = "UPDATE accounts SET balance = balance + ? WHERE account_id = ?";
+            updateBalanceStmt = conn.prepareStatement(updateBalanceSQL);
+            updateBalanceStmt.setDouble(1, amount);
+            updateBalanceStmt.setInt(2, accountNumber);
+            int affectedRows = updateBalanceStmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating balance failed, no rows affected.");
+            }
+
+            // Insert transaction record
+            String insertTransactionSQL = "INSERT INTO transactions (t_date, descr, amount, source_id, destination_id) VALUES (?, ?, ?, ?, ?)";
+            insertTransactionStmt = conn.prepareStatement(insertTransactionSQL, Statement.RETURN_GENERATED_KEYS);
+            insertTransactionStmt.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            insertTransactionStmt.setString(2, "DEPOSIT");
+            insertTransactionStmt.setDouble(3, amount);
+            insertTransactionStmt.setInt(4, accountNumber);
+            insertTransactionStmt.setInt(5, accountNumber);
+            insertTransactionStmt.executeUpdate();
+
+            // Commit transaction
+            conn.commit();
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+        } finally {
+            if (rs != null) rs.close();
+            if (updateBalanceStmt != null) updateBalanceStmt.close();
+            if (insertTransactionStmt != null) insertTransactionStmt.close();
+            if (conn != null) conn.close();
+        }
+        AuditService.getInstance().logAction("Added deposit");
+    }
+
+    public void withdraw(int accountNumber, double amount) throws SQLException {
+        Connection conn = null;
+        PreparedStatement checkBalanceStmt = null;
+        PreparedStatement updateBalanceStmt = null;
+        PreparedStatement insertTransactionStmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            // Check account balance
+            String checkBalanceSQL = "SELECT balance FROM accounts WHERE account_id = ?";
+            checkBalanceStmt = conn.prepareStatement(checkBalanceSQL);
+            checkBalanceStmt.setInt(1, accountNumber);
+            rs = checkBalanceStmt.executeQuery();
+            if (rs.next()) {
+                double currentBalance = rs.getDouble("balance");
+                if (currentBalance < amount) {
+                    throw new SQLException("Insufficient funds for withdrawal.");
+                }
+            } else {
+                throw new SQLException("Account not found.");
+            }
+
+            // Update account balance
+            String updateBalanceSQL = "UPDATE accounts SET balance = balance - ? WHERE account_id = ?";
+            updateBalanceStmt = conn.prepareStatement(updateBalanceSQL);
+            updateBalanceStmt.setDouble(1, amount);
+            updateBalanceStmt.setInt(2, accountNumber);
+            int affectedRows = updateBalanceStmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating balance failed, no rows affected.");
+            }
+
+            // Insert transaction record
+            String insertTransactionSQL = "INSERT INTO transactions (t_date, descr, amount, source_id, destination_id) VALUES (?, ?, ?, ?, ?)";
+            insertTransactionStmt = conn.prepareStatement(insertTransactionSQL, Statement.RETURN_GENERATED_KEYS);
+            insertTransactionStmt.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            insertTransactionStmt.setString(2, "WITHDRAWAL");
+            insertTransactionStmt.setDouble(3, -amount);
+            insertTransactionStmt.setInt(4, accountNumber);
+            insertTransactionStmt.setInt(5, accountNumber);
+            insertTransactionStmt.executeUpdate();
+
+            // Commit transaction
+            conn.commit();
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+        } finally {
+            if (rs != null) rs.close();
+            if (checkBalanceStmt != null) checkBalanceStmt.close();
+            if (updateBalanceStmt != null) updateBalanceStmt.close();
+            if (insertTransactionStmt != null) insertTransactionStmt.close();
+            if (conn != null) conn.close();
+        }
+        AuditService.getInstance().logAction("Withdrawal");
+    }
+
 }

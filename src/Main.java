@@ -92,6 +92,7 @@ public class Main {
         int dst = scanner.nextInt();
         System.out.println("Amount:");
         double amount = scanner.nextDouble();
+        scanner.nextLine();
         System.out.println("Description:");
         String description = scanner.nextLine();
         bankService.transfer(src, dst, amount, description);

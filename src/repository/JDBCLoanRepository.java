@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class JDBCLoanRepository implements LoanRepository {
-    private double interestRate = 15.0;
+    private double interestRate = 0.15;
 
     private Connection getConnection() throws SQLException {
         String url = DbConstants.DB_CONNECTION_URL;
@@ -102,5 +102,53 @@ public class JDBCLoanRepository implements LoanRepository {
         }
         AuditService.getInstance().logAction("Got customers with their loans");
         return customers;
+    }
+
+    public void makeLoanPayment(int loanId, double paymentAmount) throws SQLException {
+        Connection conn = null;
+        PreparedStatement checkLoanStmt = null;
+        PreparedStatement updateLoanStmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+            String checkLoanSQL = "SELECT balance FROM loans WHERE loan_id = ?";
+            checkLoanStmt = conn.prepareStatement(checkLoanSQL);
+            checkLoanStmt.setInt(1, loanId);
+            rs = checkLoanStmt.executeQuery();
+            if (rs.next()) {
+                double currentBalance = rs.getDouble("balance");
+                if (currentBalance < paymentAmount) {
+                    throw new SQLException("Payment amount exceeds the remaining loan balance.");
+                }
+                String updateLoanSQL = "UPDATE loans SET balance = balance - ? WHERE loan_id = ?";
+                updateLoanStmt = conn.prepareStatement(updateLoanSQL);
+                updateLoanStmt.setDouble(1, paymentAmount);
+                updateLoanStmt.setInt(2, loanId);
+                int affectedRows = updateLoanStmt.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Updating loan balance failed, no rows affected.");
+                }
+                conn.commit();
+            } else {
+                throw new SQLException("Loan not found.");
+            }
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+        } finally {
+            if (rs != null) rs.close();
+            if (checkLoanStmt != null) checkLoanStmt.close();
+            if (updateLoanStmt != null) updateLoanStmt.close();
+            if (conn != null) conn.close();
+        }
+        AuditService.getInstance().logAction("Made loan payment");
     }
 }

@@ -44,6 +44,7 @@ public class LoanService {
         for (Customer customer : loanRepository.getLoans().keySet()) {
             for (Loan loan : loanRepository.getLoans().get(customer)) {
                 if (loan.getLoanId() == loanId) {
+                    loanRepository.makeLoanPayment(loanId, amount);
                     loan.makePayment(amount);
                 }
             }

@@ -29,6 +29,10 @@ public class BankAccount {
         return false;
     }
 
+    public void setBalance(double value) {
+        this.balance = value;
+    }
+
     @Override
     public String toString() {
         return "\nAccount number: " + accountNumber +

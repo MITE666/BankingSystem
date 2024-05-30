@@ -4,7 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c31ebe23-9aa1-4722-9d7c-3e323af9be63" name="Changes" comment="jdbc for loan and bank repositories" />
+    <list default="true" id="c31ebe23-9aa1-4722-9d7c-3e323af9be63" name="Changes" comment="jdbc for loan and bank repositories">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/audit.csv" beforeDir="false" afterPath="$PROJECT_DIR$/logs/audit.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/BankAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BankAccount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Loan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Loan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/BankRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/BankRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/BankRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/BankRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/JDBCBankRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/JDBCBankRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/JDBCLoanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/JDBCLoanRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/LoanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/LoanRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/LoanRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/LoanRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/BankService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/BankService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/LoanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/LoanService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,7 +61,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Main.executor": "Run",
+    "Application.Main.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
@@ -82,6 +97,7 @@
       <option name="presentableId" value="Default" />
       <updated>1712818606842</updated>
       <workItem from="1716845697319" duration="6028000" />
+      <workItem from="1717074508083" duration="4154000" />
     </task>
     <task id="LOCAL-00001" summary="Sample">
       <option name="closed" value="true" />
@@ -180,6 +196,27 @@
     <MESSAGE value="added loan and bank repository and their implementation" />
     <MESSAGE value="jdbc for loan and bank repositories" />
     <option name="LAST_COMMIT_MESSAGE" value="jdbc for loan and bank repositories" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/repository/JDBCBankRepository.java</url>
+          <line>142</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/service/BankService.java</url>
+          <line>20</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/service/LoanService.java</url>
+          <line>33</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

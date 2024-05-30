@@ -18,10 +18,11 @@ public class Loan {
         this.loanAmount = loanAmount;
         this.interestRate = interestRate;
         this.currentBalance = loanAmount;
+        this.repaymentPeriod = repaymentPeriodMonths;
     }
 
     public double calculateInterest() {
-        double monthlyInterestRate = interestRate / 100 / repaymentPeriod;
+        double monthlyInterestRate = interestRate / repaymentPeriod;
         return loanAmount * monthlyInterestRate;
     }
 

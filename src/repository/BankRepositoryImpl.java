@@ -89,5 +89,19 @@ public class BankRepositoryImpl implements BankRepository {
         AuditService.getInstance().logAction("Got account");
         return null;
     }
+
+    @Override
+    public void addTransaction(Transaction transaction) {
+        return;
+    }
+
+    @Override
+    public void addDeposit(int accountNumber, double amount) {
+        return;
+    }
+
+    public void withdraw(int accountNumber, double amount) {
+        return;
+    }
 }
 

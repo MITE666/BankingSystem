@@ -22,7 +22,7 @@ public class BankService {
         if (customer != null) {
             BankAccount account = bankRepository.getAccount(customer, accountNumber);
             if (account != null) {
-                account.deposit(amount);
+                bankRepository.addDeposit(accountNumber, amount);
                 return true;
             }
         }
@@ -34,6 +34,7 @@ public class BankService {
         if (customer != null) {
             BankAccount account = bankRepository.getAccount(customer, accountNumber);
             if (account != null) {
+                bankRepository.withdraw(accountNumber, amount);
                 return account.withdraw(amount);
             }
         }

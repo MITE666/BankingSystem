@@ -11,6 +11,10 @@ import java.util.Map;
 public interface BankRepository {
     void createAccount(String customerName, double initialBalance, String accountType);
 
+    void addTransaction(Transaction transaction);
+
+    void addDeposit(int accountNumber, double amount) throws SQLException;
+
     Customer getCustomer(int accountNumber) throws SQLException;
 
     BankAccount getAccount(Customer customer, int accountNumber) throws SQLException;
@@ -18,4 +22,6 @@ public interface BankRepository {
     List<Transaction> getTransactions() throws SQLException;
 
     Map<Customer, List<BankAccount>> getCustomers() throws SQLException;
+
+    public void withdraw(int accountNumber, double amount) throws SQLException;
 }

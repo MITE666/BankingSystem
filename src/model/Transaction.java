@@ -1,5 +1,7 @@
 package model;
 
+import repository.BankRepository;
+
 import java.time.LocalDateTime;
 
 public class Transaction {
@@ -19,6 +21,14 @@ public class Transaction {
 
     public LocalDateTime getTimestamp() {
         return timestamp;
+    }
+
+    public BankAccount getSource() {
+        return source;
+    }
+
+    public BankAccount getDestination() {
+        return destination;
     }
 
     public String getDescription() {

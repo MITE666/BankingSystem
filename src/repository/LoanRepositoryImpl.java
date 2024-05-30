@@ -40,4 +40,8 @@ public class LoanRepositoryImpl implements LoanRepository {
         }
         loans.get(customer).add(loan);
     }
+
+    public void makeLoanPayment(int loanId, double paymentAmount) {
+        return;
+    }
 }
